@@ -1,0 +1,19 @@
+{% for object in machinerequirementobject %}
+<tr>
+    <td>{{object.prs_id}}</td>
+    <td>{{object.title}}</td>
+    <td>{{object.area}}</td>
+    <td>{{object.description}}</td>
+    <td>{{object.priority}}</td>
+    <td>{{object.category}}</td>
+    <td>{{object.status}}</td>
+    <td>{{object.type}}</td>
+    <td>{{object.remarks}}</td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="7" class="text-center bg-warning">No Machine Requirement</td>
+</tr>
+{% endfor %}
+
+<!-- <td>{{object.id}}</td> /-->

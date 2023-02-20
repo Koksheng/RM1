@@ -1,0 +1,68 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style type="text/css">
+	.container{
+        padding-top:20px;
+        width: 100%;
+        max-width:768px;
+        margin: auto;
+	}
+</style>
+
+<div class = "container justify-content-center">
+        <div class="row justify-content-center mt-3">
+            <div class="column mx-3 text-center">
+                <a title="Machine Requirement Initialization" href="{% url 'dashboard:machinerequirement' %} " style ="color: #012863; text-decoration: none;" >
+                    <div class="propor_featured">
+                        <div class="propor_thumb">
+                            <i class="fas fa-solar-panel fa-8x"></i>
+                        </div>
+                        <br>
+                    </div>
+                    <label> Machine Rqmt </label>
+                </a>
+            </div>
+            <div class="column mx-3 text-center">
+                <a title="Module Requirement Initialization" href="{% url 'dashboard:modulerequirement' %} "style ="color: #012863; text-decoration: none;">
+                    <div class="propor_featured">
+                        <div class="propor_thumb">
+                            <i class="fas fa-window-restore fa-8x"></i>
+                        </div>
+                        <br>
+                    </div>
+                    <label> Module Rqmt </label>
+                </a>
+            </div>
+            <div class="column mx-3 text-center">
+                <a title="Holder Initialization" style ="color: #6C4B5E; text-decoration: none;">
+                    <div class="propor_featured">
+                        <div class="propor_thumb">
+                            <i class="fas fa-mitten fa-8x"></i>
+                        </div>
+                        <br>
+                    </div>
+                    <label> Holder List </label>
+                </a>
+            </div>
+            <div class="column mx-3 text-center">
+                <a title="Part Number Initialization" style ="color: #77BA99; text-decoration: none;">
+                    <div class="propor_featured">
+                        <div class="propor_thumb">
+                            <i class="fas fa-clipboard fa-8x"></i>
+                        </div>
+                        <br>
+                    </div>
+                    <label> Part Number </label>
+                </a>
+            </div>
+        </div>
+        
+</div>
+
+
+
+{% endblock content %}

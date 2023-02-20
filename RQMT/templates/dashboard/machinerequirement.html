@@ -1,0 +1,209 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+<style type="text/css">
+	.container{
+        padding-top:20px;
+        width: 100%;
+        max-width:1600px;
+        margin: auto;
+	}
+
+</style>
+
+<div class = "container">
+    <div class= "justify-content-center">
+
+        <!--Creation Form-->
+        <label><h1>Machine Requirement</h1></label>
+        <br>
+            <div class="row">
+                <div class="col-6">
+                    <button type="button" 
+                        class="btn btn-primary js-create-processstage">
+                        <i class="fas fa-plus"></i>
+                        Create Process Stage
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md">
+                <div class="card card-body">
+                    <!-- bootstrap-table declares id= "table" while table class = "table" -->
+                    <table 
+                        id = "table" 
+                        data-toggle="table"
+                        data-toolbar="#toolbar"
+                        data-search="true"
+                        data-show-fullscreen="true"
+                        data-show-columns="true"
+                        data-show-columns-toggle-all="true"
+                        data-show-refresh="true"
+                        data-show-export="true"
+                        data-click-to-select="true"
+                        data-minimum-count-columns="2"
+                        data-show-pagination-switch="true"
+                        data-pagination="false"
+                        data-page-list="[10, 25, 50, 100, all]"
+                        >
+                    <thead>
+                        <!-- <th data-field="id" data-visible="false">Id</th> -->
+                        <tr>
+                            <th data-field="prs_id">Id</th>
+                            <th data-field="title">Title</th>
+                            <th data-field="area">Area</th>
+                            <th data-field="description">Description</th>
+                            <th data-field="priority">Priority</th>
+                            <th data-field="category">Category</th>
+                            <th data-field="status">Status</th>
+                            <th data-field="type">Type</th>
+                            <th data-field="remarks">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% include 'dashboard/machinerequirement_cud/partial_list.html' %}
+                    </tbody>
+                    </table>
+                    <!--End of Bootstrap Table-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- THE MODAL WE WILL BE USING -->
+<div class="modal fade" id="modal-processstage">
+    <div class="modal-dialog">
+        <div class="modal-content">
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block script %}
+
+<script>
+// https://simpleisbetterthancomplex.com/tutorial/2016/11/15/how-to-implement-a-crud-using-ajax-and-json.html
+
+
+
+var loadForm = function () {
+    console.log("loadForm");
+    var btn = $(this); {
+        $.ajax({
+            url: btn.attr("data-url"),  // <-- AND HERE
+            type: 'get',
+            dataType: 'json',
+            // beforeSend: function () {
+            //     $("#modal-processstage").modal("show");
+            // },
+            success: function (data) {
+                if(data.permission){
+                    $("#modal-processstage").modal("show");
+                    $("#modal-processstage .modal-content").html(data.html_form);
+                    $(function(){
+                        $('select[name="transtype"]').change(function(){
+                            transtypeChange();
+                        });
+                    });
+                }
+                else{
+                    alert(data.message);
+                }
+            },
+        });
+    }
+}
+
+var loadEditForm = function () {
+    var btn = $(this); {
+        $.ajax({
+            url: btn.attr("data-url"),  // <-- AND HERE
+            type: 'get',
+            dataType: 'json',
+            // beforeSend: function () {
+                // $("#modal-processstage").modal("show");
+            // },
+            success: function (data) {
+                if(data.permission){
+                    $("#modal-processstage").modal("show");
+                    $("#modal-processstage .modal-content").html(data.html_form);
+
+                    setTimeout(function() { 
+                        $('input[name="general_process_stage"]').val(data.process_stage_name)
+                    }, 150);
+                }
+                else{
+                    alert(data.message);
+                }
+                
+
+                // var e = document.getElementById("id_stage_profile");
+                // var stage_profile = e.value;
+                // console.log("success stage_profile",stage_profile);
+                // transtypeChange();
+                // setTimeout(function() { 
+                //     $('select[name="stage_profile"]').val(stage_profile)
+                // }, 90);
+
+                // $(function(){
+                //     $('select[name="transtype"]').change(function(){
+                //         transtypeChange();
+                //     });
+                // });
+            },
+        });
+    }
+}
+
+
+var saveForm = function () {
+    var form = $(this);
+    console.log("saveForm", form);
+    $.ajax({
+        url: form.attr("action"),
+        data: form.serialize(),
+        type: form.attr("method"),
+        dataType: 'json',
+        success: function (data) {
+            if (data.form_is_valid) {
+                console.log(data)
+                console.log(data.html_processstage_list)
+                //console.log(data.json_holder_list)
+                console.log(data.json_processstage_list)
+                $("#table tbody").html(data.html_processstage_list);  // <-- Replace the table body
+                $("#modal-processstage").modal("hide");  // <-- Close the modal
+
+                //A lousy fix because the new inputted value does not get loaded 
+                //location.reload();
+            }
+            else {
+                //Must have whitespace!
+                $("#modal-processstage .modal-content").html(data.html_form);
+            }
+        }
+    });
+    return false;
+}
+
+// Create folder
+$(".js-create-processstage").click(loadForm);
+$("#modal-processstage").on("submit", ".js-processstage-create-form", saveForm);
+
+// Update folder
+$("#table").on("click", ".js-edit-processstage", loadEditForm);
+$("#modal-processstage").on("submit", ".js-processstage-edit-form", saveForm);
+
+// Delete folder
+$("#table").on("click", ".js-delete-processstage", loadForm);
+$("#modal-processstage").on("submit", ".js-processstage-delete-form", saveForm);
+
+
+</script>
+
+{% endblock script %}
